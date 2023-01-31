@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load hitcount_tags %}
+
+{% block left_content %}
+
+
+    <!-- Left Side Content -->
+    
+    <div class="left-side">
+        
+        {% if main_post %}
+        {% for post in main_post %}
+        {% if forloop.counter == 1 %}
+        <div class="main-post">
+            <div class="post-img">
+                <img src="/media/{{post.blog.image}}" alt="">
+            </div>
+            <div class="shade"></div>
+            <div class="post-text">
+                <div class="tag-box">
+                    <a href="{% url 'category' post.blog.category.slug %}" class="a-title "><p class="tag text-white mb-0">{{post.blog.category.title}}</p></a>
+                </div>
+                
+                <a href="{% url 'content' post.blog.slug %}" class="text-white a-title"><h1 class="post-title text-white">{{post.blog.title}}</h1></a>
+                <p class="created_at">{{post.blog.created_at | date:"F d Y" }}</p>
+            </div>
+            
+        </div>
+        {% endif %}
+        {% endfor %}
+        
+        {% endif %}
+
+        <div class="sub-post mt-2">
+            <div class="f aic media-post g-1">
+                {% for post in main_post %}
+                {% if forloop.counter != 1 %}
+                <div class="second-post fb-50">
+                    <div class="img">
+                        <img src="/media/{{post.blog.image}}" alt="">
+                    </div>
+                    <div class="second-post-text card">
+                        <p class="created_at light">{{post.blog.tag.title}}</p>
+                        <a href="{% url 'content' post.blog.slug %}" class="a-title"><h1 class="post-title">{{post.blog.title | slice:"0:50"}} ...</h1></a>
+                        {% comment %} <div id="model-content">{{blog.content|safe|truncatechars:20}}...</div> {% endcomment %}
+                        <p class="created_at light">{{post.blog.created_at | date:"F d Y"}}</p>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+
+            </div>
+        </div>
+
+        <!-- Latest Blog -->
+
+        <section class="latest-blog mt-3">
+            <h1 class="heading mb-1 upper">Latest Blog</h1>
+
+            <div id="all-blog">
+            {% comment %} {% if blogs %}
+            {% for blog in blogs %}
+            
+                <div class="blog">
+                    <div class="blog-flex card">
+                        <div class="blog-img">
+                            <img src="/media/{{blog.image}}" alt="">
+                        </div>
+                        <div class="blog-text">
+                            <p class="created_at light">{{blog.tag.title}}</p>
+                            <a href="{% url 'content' blog.slug %}" class="a-title"><h1 class="blog-title">{{blog.title}}</h1></a>
+                            <div id="model-content"></div>
+                            <p class="created_at light">{{blog.created_at | date:"F d Y"}}</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            
+            {% endfor %}
+            {% endif %} {% endcomment %}
+            </div>
+
+        </section>
+
+        <!-- load More -->
+        <div class="f aic jc-c not-visible mt-1" id="visible">
+            <img style="width:25px" src="{% static 'images/loading-gif.gif' %}" alt="">
+        </div>
+        <div id="msg-box"></div>
+        <div id="load-more" class="load-more mt-1 card">
+                <button class="c-text" id="load-btn">Load More</button>
+        </div>
+
+
+
+
+
+            <!-- Ads -->
+        
+            {% comment %} <div class="category card mt-2" >
+                <p class="small-text a-title">Ads</p>
+                <div class="category-list mt-1">
+        
+                    <a href=""><img style="height:100px;" src="" alt=""></a>
+        
+                </div>
+            </div> {% endcomment %}
+
+
+
+
+
+    </div>
+
+                
+
+{% endblock left_content %}
+

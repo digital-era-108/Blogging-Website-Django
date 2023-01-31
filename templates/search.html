@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block left_content %}
+
+    <section class="latest-blog mt-1">
+        <h1 class="small-text mb-1 upper">Result - {% if query|length > 80 %}{{query|slice:"0:30"}}... {% else %} {{query}} {% endif %} - " {{posts.count}} "</h1>
+        
+            {% if posts %}
+            {% for post in posts %}
+            <div class="blog">
+                <div class="blog-flex card">
+                    <div class="blog-img">
+                        <img src="/media/{{post.image}}" alt="">
+                    </div>
+                    <div class="blog-text">
+                        <a href="{% url 'content' post.slug %}" class="a-title"><h1 class="blog-title">{{post.title}}</h1></a>
+                        <!-- <div id="model-content">{{post.content|safe|slice:"0:20"}}...</div> -->
+                        <p class="created_at light">{{post.created_at | date:"F d Y"}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h1 class="small-text mb-1 upper">No Result Found - 404</h1>
+            <ul style="margin-left:20px;">
+                <li class="small-text">. Make sure that all words are spelled correctly.</li>
+                <li class="small-text">. Try different keywords.</li>
+                <li class="small-text">. Try more general keywords.</li>
+                <li class="small-text">. Try fewer keywords.</li>
+            </ul>
+            {% endif %}
+
+    </section>
+
+
+
+{% endblock  %}

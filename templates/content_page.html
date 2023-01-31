@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load extra %}
+{% load hitcount_tags %}
+
+
+{% block title %}Content{% endblock title %}
+
+
+{% block left_content %}
+
+<section class="content">
+
+    {% if post %}
+    <div class="selected-post">
+        <h1 class="post-title title">{{post.title}}</h1>
+        <div class="sharewithdate mt-1 mb-1 f aic jcsb">
+            <div class="f aic g-1">
+                <p class="created_at light">{{post.created_at | date:"F d Y"}}</p>
+                <p class="created_at light"><i class="mr-05 fa-solid fa-eye"></i>{% get_hit_count for post %}</p>
+            </div>
+
+            
+            <div class="share-icon">
+                <button id="view-model"><i class="fa fa-share"></i></button>
+            </div> 
+            <div class="pop">
+                <div class="head f aic jcsb">
+                    <h1 class="heading title upper">Share</h1>
+                    <button id="close-btn"><i class="fa fa-close"></i></button>
+                </div>
+                <hr>
+                <div class="mid-part f aic jc-c mb-1">
+                    <div class="footer-icons dark-icons mt-1">
+                        <a href="" class="tag-box"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="" class="tag-box"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="" class="tag-box"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="" class="tag-box"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+                <hr>
+                <div class="end-pop">
+                    <h1 class="heading title upper">Or Copy Link</h1>
+                    <div class="copy-field">
+                        <input type="text" id="copy-text">
+                        <button id="btn-copy">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div id="model-content">
+            {{post.content | safe}}
+        </div>
+
+    </div>
+    {% endif %}
+
+
+
+
+    <!-- Ads -->
+
+    {% comment %} <div class="category card mt-2" >
+        <p class="small-text a-title">Ads</p>
+        <div class="category-list mt-1">
+
+            <a href=""><img style="height:100px;" src="" alt=""></a>
+
+        </div>
+    </div> {% endcomment %}
+    
+
+    
+    <!-- Related Post -->    
+    {% if related_posts %}
+    <div class="related-post mt-3">
+        
+        <h1 class="heading mb-1 upper">Related Post</h1>
+        
+        
+        <div class="sub-post mt-2">
+            
+            <div class="f aic g-1 media-post">
+                {% for post in related_posts %}
+                <div class="second-post fb-50">
+                    <div class="img">
+                        <img src="/media/{{post.image}}" alt="">
+                    </div>
+                    <div class="second-post-text card">
+                        <p class="created_at light">{{post.tag.title}}</p>
+                        <a href="{% url 'content' post.slug %}" class="a-title"><h1 class="post-title">{{post.title|slice:"0:48"}} {% if post.title|length > 48 %} ...{% endif %}</h1></a>
+                        <p class="created_at light">{{post.created_at | date:"F d Y"}}</p>
+                    </div>
+                </div>
+                
+                {% endfor %}
+            </div>
+
+        </div>
+        
+        
+    </div>
+    {% endif %}
+
+
+
+    
+    <!-- Comment -->    
+
+    <section class="comment mt-4">
+        {% if not user.is_authenticated %}<p class="a-title small-text mb-1 main-color">Please First Login for Comment -  <a href="{% url 'signin' %}" style="color:blue;" >Sign In</a></p>{% endif %}
+        <h1 class="heading mb-1 upper">Comments - ( {{comments.count}} )</h1>
+
+        <form action="{% url 'comment' %}" method="POST">
+            {% csrf_token %}
+            <div class="comment-input card">
+                <input type="text" name="comment" placeholder="Add Your Comment" required>
+                <input type="hidden" name="parent-id" value="">
+                
+            </div>
+            <input type="hidden" name="post-id" value={{post.id}}>
+            <button type="submit" class="a-title small-text main-color mt-1">Add Comment</button>
+        </form>
+
+        {% if comments %}
+        {% for comment in comments %}
+        <div class="main-comment card mt-2 mb-2">
+            <div class="comment-img mb-05">
+                <div class="img">
+                    <img src="{% static 'images/user.png' %}" alt="">  
+                </div>
+                <div class="name">
+                    <h2 class="heading no-upper">{{comment.user.first_name}}</h2>
+                    <p class="created_at light">{{comment.created_at | naturaltime}}</p>
+                </div>
+            </div>
+            <div class="comment-content">
+                <p class="">{{comment.comment}}</p>
+            </div> 
+
+            {% if replies %}
+            <div class="replies mt-1 mb-1">
+                
+                {% for reply in replies|get_val:comment.id %}
+                <div class="reply-comment card reply-fix">
+                    <div class="comment-img mb-05">
+                        <div class="img">
+                            <img src="{% static 'images/user.png' %}" alt="">  
+                        </div>
+                        <div class="name">
+                            <h2 class="heading no-upper">{{reply.user.first_name}}</h2>
+                            <p class="created_at light">{{reply.created_at | naturaltime}}</p>
+                        </div>
+                    </div>
+                    <div class="comment-content">
+                        <p>{{reply.reply}}</p>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if comment.user != request.user %}
+
+            <div class="reply-post mt-1">
+                <button class="a-title small-text main-color" type="button" style="border:none !important ; background:none !important; cursor: pointer; outline:none;" id="reply-btn">Reply Post</button>
+
+                <!-- data-target="reply-box{{comment.id}}" aria-controls="reply-box{{comment.id}}" aria-expanded="false"
+                data-toggle="collapse" -->
+
+                 <div class="mt-1 reply-box" id="reply-box">
+                    <div class="box-input">
+                        <form action="{% url 'reply' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="comment-input card">
+                                <input type="text" name="reply-comment" placeholder="Add Your Comment" required>
+                                <input type="hidden" name="comment-id" value="{{comment.id}}">
+                            </div>
+                            <button type="submit" class="a-title small-text main-color">Add Comment</button>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+    </section>
+
+
+    
+
+</section>
+
+{% endblock %}
+
+

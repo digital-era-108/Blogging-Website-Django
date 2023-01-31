@@ -1,0 +1,108 @@
+{% load static %}
+
+{% block right_content %}
+
+<!-- Right Side Content -->
+    
+<div class="right-side">
+    <div class="social-icons">
+        <a href="" target="blank" class="a-title"><i class="fa-brands fa-facebook tag-box"></i><span class="small-text text-white">Facebook</span></a>
+        <a href="" target="blank" class="a-title"><i class="tag-box fa-brands fa-twitter"></i><span class="small-text text-white">Twitter</span></a>
+        <a href="https://www.instagram.com/" target="blank" class="a-title"><i class="fa-brands fa-instagram tag-box"></i><span class="small-text text-white">Instagram</span></a>
+        <a href="" target="blank" class="a-title"><i class="tag-box fa-brands fa-youtube"></i><span class="small-text text-white">Youtube</span></a>
+    </div>
+
+
+    {% if popular_blog %}
+    <div class="popular-post card mt-2">
+        <h1 class="heading title upper">Popular Post</h1>
+        {% for blog in popular_blog %}
+        {% if forloop.counter == 1 %}
+        <div class="popular-content mt-1 mb-1">
+            <div class="popular-img">
+                <img src="/media/{{blog.image}}" alt="">
+            </div>
+            <div class="shade-1"></div>
+            <div class="popular-text">
+                <div class="tag-box">
+                    <a href="{% url 'category' blog.category.slug %}" class="a-title "><p class="tag text-white mb-0">{{blog.category.title}}</p></a>
+                </div>
+                
+                <a href="{% url 'content' blog.slug %}" class="text-white a-title"><h3 class="text-white popular-title">{{blog.title}}</h3></a>
+                <p class="created_at text-white">{{blog.created_at | date:"F d Y"}}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        
+        <div class="popular-list">
+            {% for blog in popular_blog %}
+            {% if forloop.counter != 1 %}
+            <div class="list">
+                <div class="list-img">
+                    <img src="/media/{{blog.image}}" alt="">
+                </div>
+                <div class="list-text">
+                    <a href="{% url 'content' blog.slug %}" class="a-title"><h3 class="popular-title">{{blog.title}}</h3></a>
+                    <p class="created_at light">{{blog.created_at | date:"F.d.Y"}}</p>
+                    
+                </div>
+            </div>
+            <hr>
+            {% endif %}
+            {% endfor %}
+            
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Categories -->
+
+    <div class="category card mt-2">
+        <h1 class="heading title upper">categories</h1>
+        <div class="category-list mt-1">
+            {% if all_categories %}
+            {% for category in all_categories %}
+            <div class="c-list mt-1 mb-1 f aic jcsb">
+                <a href="{% url 'category' category.slug %}" class="a-title"><p class="c-text">{{category.title}}</p></a>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- Tags -->
+
+    <div class="category tags card mt-2">
+        <h1 class="heading title upper">Tags</h1>
+        <div class="category-list mt-1">
+
+            {% if tags %}
+            {% for tag in tags %}
+            <div class="c-list tag-box">
+                <a href="{% url 'tag' tag.slug %}" class="a-title"><p class="c-text tag share-icon">{{tag.title}}</p></a>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    <!-- Ads -->
+    <div class="ads category tags card mt-2">
+        <h1 class="heading title upper">Ads</h1>
+        <div class="category-list mt-1">
+
+            <a href=""><img src="{% static 'images/ads.gif' %}" alt=""></a>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock right_content %}

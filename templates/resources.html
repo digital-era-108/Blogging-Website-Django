@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resources{% endblock title %}
+
+{% block left_content %}
+
+<div class="sub-post">
+    <div class="f aic media-post g-1">
+        <div class="second-post fb-50">
+            <div class="img">
+                <img src="{% static 'images/plan-1.jpg' %}" alt="">
+            </div>
+            <div class="second-post-text card">
+                <p class="created_at light">{{post.blog.tag.title}}</p>
+                <a href="" class="a-title"><h1 class="post-title">{{post.blog.title | slice:"0:50"}} ...</h1></a>
+                <p class="created_at light">{{post.blog.created_at | date:"F d Y"}}</p>
+                <a  {% if user.is_authenticated %} href="/media/pdf/IAB-Affiliate-Marketing-Handbook_2016.pdf" download {% else %} href="{% url 'signin' %}" {% endif %} class="small-text a-title" >Download PDF</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock left_content %}
+
+
